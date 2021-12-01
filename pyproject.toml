@@ -34,3 +34,6 @@ profile = "black"
 [flake8]
 max-line-length = 88
 extend-ignore = "E203, E501"
+
+[tool.bandit]
+skips = ["B311"]

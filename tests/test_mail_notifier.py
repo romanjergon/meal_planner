@@ -3,7 +3,7 @@ import mock
 from meal_planner.mail_notifier import MailNotifier
 
 
-@mock.patch("flight_deals_searcher.mail_notifier.smtplib.SMTP")
+@mock.patch("meal_planner.mail_notifier.smtplib.SMTP")
 def test_send_notif_mail(mocker):
     def test_send_notif_mail_decorator(mocked_smtp):
         notifier = MailNotifier(
