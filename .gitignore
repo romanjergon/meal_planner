@@ -1,0 +1,9 @@
+.mypy_cache
+.pytest_cache
+.tox
+.coverage
+.env
+venv
+.dmypy.json
+.idea
+google_cred.json
