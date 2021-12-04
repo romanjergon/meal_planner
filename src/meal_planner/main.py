@@ -3,11 +3,11 @@ import datetime
 import logging
 import os
 
-import meal_plan_formatter
-import meal_plan_generator
+from meal_planner import meal_plan_formatter
+from meal_planner import meal_plan_generator
 from dotenv import load_dotenv
-from meals_list_manager import MealsListManager
-from plan_period import PlanPeriod
+from meal_planner.meals_list_manager import MealsListManager
+from meal_planner.plan_period import PlanPeriod
 
 import meal_planner.mail_notifier
 from meal_planner.mealitem import MealItem

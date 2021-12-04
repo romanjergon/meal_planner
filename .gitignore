@@ -1,5 +1,6 @@
 .mypy_cache
 .pytest_cache
+__pycache__
 .tox
 .coverage
 .hypothesis
@@ -8,3 +9,5 @@ venv
 .dmypy.json
 .idea
 google_cred.json
+.vscode
+

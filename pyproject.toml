@@ -11,6 +11,7 @@ testpaths = [
 
 [tool.mypy]
 mypy_path = "src"
+ignore_missing_imports_per_module = true
 disallow_untyped_calls = true
 disallow_untyped_defs = true
 check_untyped_defs = true
