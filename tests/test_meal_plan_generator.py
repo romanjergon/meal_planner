@@ -1,7 +1,10 @@
 import datetime
 from enum import Enum
 
+from hypothesis import given
+from hypothesis.strategies import dates
 import pytest
+
 
 from meal_planner import meal_plan_generator
 from meal_planner.mealitem import MealItem
@@ -78,3 +81,16 @@ def test_generate_meal_plan_should_raise_index_exc():
         meal_plan_generator.generate_meal_plan(
             meals_list, PlanPeriodWrong.YESTERDAY, datetime.date.today(), 14
         )
+
+
+@given(dates())
+def test_get_period_start_today(d):
+    period_start = meal_plan_generator.get_period_start(PlanPeriod.TODAY, d)
+    assert period_start == d
+
+
+def test_get_num_days_tomorrow():
+    num_days = meal_plan_generator.get_num_days(
+        PlanPeriod.NEXT_MONTH, datetime.date.fromisocalendar(2022, 1, 1)
+    )
+    assert num_days == 28
