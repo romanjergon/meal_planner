@@ -61,7 +61,7 @@ def main() -> None:
     meals_sheet = os.environ["MEALS_SHEET"]
     # endregion
     g = os.environ["GOOGLE_CREDENTIALS"]
-    print('f{g=}')
+    print(f'{g=}')
     # region get plan period
     plan_period = get_plan_period(DEFAULT_PLAN_PERIOD)
 
