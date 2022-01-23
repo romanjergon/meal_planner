@@ -61,7 +61,7 @@ def main() -> None:
     meals_sheet = os.environ["MEALS_SHEET"]
     # endregion
     # hack for escape chars in git hub action
-    g = os.environ["GOOGLE_CREDENTIALS"].replace('\\\\n', '\n')
+    g = os.environ["GOOGLE_CREDENTIALS"].replace('\\\\n', '\\n')
     print(f'{g=}')
     with open('./google_creds.json', 'w') as cred_file:
         cred_file.write(g)
