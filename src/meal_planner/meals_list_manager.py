@@ -1,4 +1,5 @@
 import datetime
+import os
 
 import pygsheets
 
@@ -9,10 +10,16 @@ class MealsListManager:
     def __init__(
         self, google_cred_env: str, spreadsheet_name: str, worksheet_index: int
     ):
-        print(f'{google_cred_env=}')
+
+        # hack for escape chars in GitHub action
+        g = os.environ[google_cred_env].replace('\\\\n', '\\n')
+        with open('./google_creds.json', 'w') as cred_file:
+            cred_file.write(g)
 
         self.gsheet_client: pygsheets.client = pygsheets.authorize(service_file='./google_creds.json'
         )
+        # hack for escape chars in GitHub action cleaning up
+        os.remove('./google_creds.json')
 
         # self.gsheet_client: pygsheets.client = pygsheets.authorize(
         #     service_account_env_var=google_cred_env
