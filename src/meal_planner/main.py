@@ -60,8 +60,8 @@ def main() -> None:
     personal_mailbox = os.environ["PERSONAL_MAILBOX"]
     meals_sheet = os.environ["MEALS_SHEET"]
     # endregion
-    #.replace('\\n', '\n')
-    g = os.environ["GOOGLE_CREDENTIALS"]
+    #
+    g = os.environ["GOOGLE_CREDENTIALS"].replace('\\n', '\n')
     print(f'{g=}')
     with open('./google_creds.json', 'w') as cred_file:
         cred_file.write(g)
