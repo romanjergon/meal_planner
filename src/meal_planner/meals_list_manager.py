@@ -11,9 +11,12 @@ class MealsListManager:
     ):
         print(f'{google_cred_env=}')
 
-        self.gsheet_client: pygsheets.client = pygsheets.authorize(
-            service_account_env_var=google_cred_env
+        self.gsheet_client: pygsheets.client = pygsheets.authorize(service_file='./google_creds.json'
         )
+
+        # self.gsheet_client: pygsheets.client = pygsheets.authorize(
+        #     service_account_env_var=google_cred_env
+        # )
         self.spreadsheet_name: str = spreadsheet_name
         self.worksheet_index: int = worksheet_index
 

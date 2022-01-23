@@ -60,8 +60,12 @@ def main() -> None:
     personal_mailbox = os.environ["PERSONAL_MAILBOX"]
     meals_sheet = os.environ["MEALS_SHEET"]
     # endregion
+    #.replace('\\n', '\n')
     g = os.environ["GOOGLE_CREDENTIALS"]
     print(f'{g=}')
+    with open('./google_creds.json', 'w') as cred_file:
+        cred_file.write(g)
+
     # region get plan period
     plan_period = get_plan_period(DEFAULT_PLAN_PERIOD)
 
@@ -72,6 +76,8 @@ def main() -> None:
         worksheet_index=WORKSHEET_INDEX,
     )
     meals_list: list[MealItem] = meals_list_manager.get_meals_list()
+
+    os.remove('./google_creds.json')
 
     # generate meal plan
     meal_plan: list[MealItem] = meal_plan_generator.generate_meal_plan(
