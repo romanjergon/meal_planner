@@ -60,7 +60,7 @@ def main() -> None:
     personal_mailbox = os.environ["PERSONAL_MAILBOX"]
     meals_sheet = os.environ["MEALS_SHEET"]
     # endregion
-
+    print('f{os.environ["GOOGLE_CREDENTIALS"]}')
     # region get plan period
     plan_period = get_plan_period(DEFAULT_PLAN_PERIOD)
 
