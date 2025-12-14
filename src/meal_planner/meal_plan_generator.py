@@ -4,8 +4,8 @@ from calendar import monthrange
 
 from dateutil.relativedelta import relativedelta
 
-from meal_planner.mealitem import MealItem
-from meal_planner.plan_period import PlanPeriod
+from .mealitem import MealItem
+from .plan_period import PlanPeriod
 
 
 def get_num_days(plan_period: PlanPeriod, create_date: datetime.date) -> int:
@@ -80,7 +80,9 @@ def select_meals(
     cooking_day = period_start
     while days_remaining > 0 and len(working_meals_list) > 0:
         chosen_meal = random.choice(working_meals_list)
-        new_meal = MealItem(chosen_meal.name, chosen_meal.days_to_serve, cooking_day)
+        new_meal = MealItem(
+            chosen_meal.name, chosen_meal.days_to_serve, chosen_meal.kind, cooking_day
+        )
         selected_meals.append(new_meal)
         days_remaining -= new_meal.days_to_serve
         cooking_day += datetime.timedelta(days=new_meal.days_to_serve)

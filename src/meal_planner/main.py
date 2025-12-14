@@ -3,14 +3,14 @@ import datetime
 import logging
 import os
 
-from meal_planner import meal_plan_formatter
-from meal_planner import meal_plan_generator
+from . import meal_plan_formatter
+from . import meal_plan_generator
 from dotenv import load_dotenv
-from meal_planner.meals_list_manager import MealsListManager
-from meal_planner.plan_period import PlanPeriod
+from .meals_list_manager import MealsListManager
+from .plan_period import PlanPeriod
 
-import meal_planner.mail_notifier
-from meal_planner.mealitem import MealItem
+from . import mail_notifier
+from .mealitem import MealItem
 
 load_dotenv()
 
@@ -20,7 +20,7 @@ def get_plan_period(default_plan_period: PlanPeriod) -> PlanPeriod:
     parser.add_argument(
         "-p",
         "--plan_period",
-        help="Sets the plan period for the meal plan. Valid values: TODAY, TOMORROW, NEXT_WEEK, NEXT_MOTH. Default value is NEXT_WEEK.",
+        help="Sets the plan period for the meal plan. Valid values: TODAY, TOMORROW, NEXT_WEEK, NEXT_MONTH. Default value is NEXT_WEEK.",
         default=f"{default_plan_period.name}",
     )
     args = parser.parse_args()
@@ -48,7 +48,6 @@ def main() -> None:
     DEFAULT_PLAN_PERIOD = PlanPeriod.NEXT_WEEK
     SMTP_HOST = "smtp.gmail.com"
     SMTP_PORT = 587
-    SPREDSHEET_TITLE = "Recepty we like"
     WORKSHEET_INDEX = 0
     GOOGLE_ACCOUNT_CREDENTIALS_ENV_VAR = "GOOGLE_CREDENTIALS"
     DAYS_MEAL_MUST_NOT_BE_SUGGESTED = 14
@@ -67,22 +66,29 @@ def main() -> None:
     # get meals list from meals list manager
     meals_list_manager = MealsListManager(
         google_cred_env=GOOGLE_ACCOUNT_CREDENTIALS_ENV_VAR,
-        spreadsheet_name=SPREDSHEET_TITLE,
+        spreadsheet_link=meals_sheet,  # pass link instead of name
         worksheet_index=WORKSHEET_INDEX,
     )
     meals_list: list[MealItem] = meals_list_manager.get_meals_list()
 
-    # generate meal plan
-    meal_plan: list[MealItem] = meal_plan_generator.generate_meal_plan(
-        meals_list, plan_period, datetime.date.today(), DAYS_MEAL_MUST_NOT_BE_SUGGESTED
+    # Separate soups and main courses
+    soups_list = [m for m in meals_list if m.kind and m.kind.strip().lower() == 'soup']
+    main_courses_list = [m for m in meals_list if not m.kind or m.kind.strip().lower() != 'soup']
+
+    # generate meal plans
+    main_course_plan: list[MealItem] = meal_plan_generator.generate_meal_plan(
+        main_courses_list, plan_period, datetime.date.today(), DAYS_MEAL_MUST_NOT_BE_SUGGESTED
+    )
+    soup_plan: list[MealItem] = meal_plan_generator.generate_meal_plan(
+        soups_list, plan_period, datetime.date.today(), DAYS_MEAL_MUST_NOT_BE_SUGGESTED
     )
     # prepare mail notification data
     mail_subject: str = meal_plan_formatter.get_mail_subject(plan_period)
     mail_body: str = meal_plan_formatter.get_mail_body(
-        meal_plan, plan_period, meals_sheet
+        main_course_plan + soup_plan, plan_period, meals_sheet
     )
     # send notif mail with meal plan
-    mailer = meal_planner.mail_notifier.MailNotifier(
+    mailer = mail_notifier.MailNotifier(
         smtp_host=SMTP_HOST,
         smtp_port=SMTP_PORT,
         notification_mailbox=notification_mailbox,
@@ -91,7 +97,7 @@ def main() -> None:
     )
     mailer.send_notif_mail(mail_subject, mail_body)
     # update last suggested date for the meal
-    meals_list_manager.update_meals_used_date(meals_list, meal_plan)
+    meals_list_manager.update_meals_used_date(meals_list, main_course_plan + soup_plan)
 
 
 if __name__ == "__main__":

@@ -15,13 +15,13 @@ def test_generate_meal_plan_happy_day():
     test_meals_names = ["Steak", "Bolognese", "Funky meal", "Jazzy meal"]
 
     meals_list: list[MealItem] = []
-    steak = MealItem(test_meals_names[0], 1, None)
+    steak = MealItem(test_meals_names[0], 1, "dinner", None)
     meals_list.append(steak)
-    steak = MealItem(test_meals_names[1], 3, None)
+    steak = MealItem(test_meals_names[1], 3, "dinner", None)
     meals_list.append(steak)
-    funky = MealItem(test_meals_names[2], 3, None)
+    funky = MealItem(test_meals_names[2], 3, "dinner", None)
     meals_list.append(funky)
-    jazzy = MealItem(test_meals_names[3], 3, None)
+    jazzy = MealItem(test_meals_names[3], 3, "dinner", None)
     meals_list.append(jazzy)
 
     test_meal_plan = meal_plan_generator.generate_meal_plan(
@@ -52,11 +52,12 @@ def test_generate_meal_plan_period_from_last_suggested():
     steak = MealItem(
         "Steak not suggested for long time",
         1,
+        "dinner",
         datetime.date.fromisoformat("2021-10-20"),
     )
     meals_list.append(steak)
     jazzy = MealItem(
-        "Jazzy meal suggested recently", 3, datetime.date.fromisoformat("2021-11-10")
+        "Jazzy meal suggested recently", 3, "dinner", datetime.date.fromisoformat("2021-11-10")
     )
     meals_list.append(jazzy)
 
