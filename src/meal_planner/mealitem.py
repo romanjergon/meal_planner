@@ -7,4 +7,5 @@ from typing import Optional
 class MealItem:
     name: str
     days_to_serve: int
+    kind: str
     last_suggested: Optional[datetime.date]

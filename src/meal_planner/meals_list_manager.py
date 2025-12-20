@@ -3,33 +3,31 @@ import os
 
 import pygsheets
 
-from meal_planner.mealitem import MealItem
+from .mealitem import MealItem
 
 
 class MealsListManager:
     def __init__(
-        self, google_cred_env: str, spreadsheet_name: str, worksheet_index: int
+        self, google_cred_env: str, spreadsheet_link: str, worksheet_index: int
     ):
 
         # hack for escape chars in GitHub action
-        g = os.environ[google_cred_env].replace('\\\\n', '\\n')
-        with open('./google_creds.json', 'w') as cred_file:
+        g = os.environ[google_cred_env].replace("\\\\n", "\\n")
+        with open("./google_creds.json", "w") as cred_file:
             cred_file.write(g)
 
-        self.gsheet_client: pygsheets.client = pygsheets.authorize(service_file='./google_creds.json'
+        self.gsheet_client: pygsheets.client = pygsheets.authorize(
+            service_file="./google_creds.json"
         )
         # hack for escape chars in GitHub action cleaning up
-        os.remove('./google_creds.json')
+        os.remove("./google_creds.json")
 
-        # self.gsheet_client: pygsheets.client = pygsheets.authorize(
-        #     service_account_env_var=google_cred_env
-        # )
-        self.spreadsheet_name: str = spreadsheet_name
+        self.spreadsheet_link: str = spreadsheet_link
         self.worksheet_index: int = worksheet_index
 
     def get_meals_sheet_pygsheets(self) -> pygsheets.worksheet:
-        meals_spreadsheet: pygsheets.spreadsheet = self.gsheet_client.open(
-            self.spreadsheet_name
+        meals_spreadsheet: pygsheets.spreadsheet = self.gsheet_client.open_by_url(
+            self.spreadsheet_link
         )
         current_worksheet: pygsheets.worksheet = meals_spreadsheet.worksheet(
             value=self.worksheet_index
@@ -51,7 +49,12 @@ class MealsListManager:
                 )
 
         meals_list: list[MealItem] = [
-            MealItem(meal["Meal"], meal["Days to serve"], meal["Last suggested to"])
+            MealItem(
+                meal["Meal"],
+                meal["Days to serve"],
+                meal.get("Kind", ""),
+                meal["Last suggested to"],
+            )
             for meal in all_records
         ]
         return meals_list

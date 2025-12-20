@@ -1,5 +1,7 @@
-from meal_planner.mealitem import MealItem
-from meal_planner.plan_period import PlanPeriod
+import datetime
+
+from .mealitem import MealItem
+from .plan_period import PlanPeriod
 
 
 def get_mail_subject(plan_period: PlanPeriod) -> str:
@@ -20,10 +22,10 @@ def get_mail_body(
         f"Čím více jídel bude v seznamu oblíbených, tím lepší tento vyběr bude. "
         f"Čím lepší název jídel bude, tím lepší budou odkazy na google. Jen prosím nemeň popisky v záhlaví.\n\n"
     )
-    for meal in meal_plan:
+    for meal in sorted(meal_plan, key=lambda m: m.last_suggested or datetime.date.min):
         mail_body += (
             f"Den: {meal.last_suggested}, {meal.name}, mělo by vystačit na {meal.days_to_serve} dny, "
-            f"recepty dle google: {GOOGLE_SEARCH_ENDPOINT}{meal.name.replace(' ','+')} \n"
+            f"recepty dle google: {GOOGLE_SEARCH_ENDPOINT}{meal.name.replace(' ', '+')} \n"
         )
     if len(meal_plan) == 0:
         mail_body += (

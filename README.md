@@ -50,3 +50,23 @@ Just run with argument --plan_period and value one of TODAY, TOMORROW, NEXT_WEEK
 ## Tests and code quality
 Just run everything via tox. To run tests use pytest.
 Yes, tests do not cover everything, I am still on my path to TDD.
+
+## How to Run the Application
+
+To generate and send a meal plan, run the following command from the project root (Windows PowerShell):
+```
+$env:PYTHONPATH="src"; poetry run python -m meal_planner.main
+```
+
+- By default, the plan is for the next week.
+- To specify a different period, use:
+  ```
+  $env:PYTHONPATH="src"; poetry run python -m meal_planner.main --plan_period TODAY
+  ```
+  Valid values: `TODAY`, `TOMORROW`, `NEXT_WEEK`, `NEXT_MONTH`
+
+If you see the error:
+```
+ModuleNotFoundError: No module named 'meal_planner'
+```
+Make sure you are running the command with `PYTHONPATH` set to `src` as shown above. This is required because the source code is inside the `src` directory.
