@@ -1,10 +1,9 @@
 import datetime
 from enum import Enum
 
+import pytest
 from hypothesis import given
 from hypothesis.strategies import dates
-import pytest
-
 
 from meal_planner import meal_plan_generator
 from meal_planner.mealitem import MealItem
@@ -57,7 +56,10 @@ def test_generate_meal_plan_period_from_last_suggested():
     )
     meals_list.append(steak)
     jazzy = MealItem(
-        "Jazzy meal suggested recently", 3, "dinner", datetime.date.fromisoformat("2021-11-10")
+        "Jazzy meal suggested recently",
+        3,
+        "dinner",
+        datetime.date.fromisoformat("2021-11-10"),
     )
     meals_list.append(jazzy)
 

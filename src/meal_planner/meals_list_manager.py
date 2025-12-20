@@ -12,14 +12,15 @@ class MealsListManager:
     ):
 
         # hack for escape chars in GitHub action
-        g = os.environ[google_cred_env].replace('\\\\n', '\\n')
-        with open('./google_creds.json', 'w') as cred_file:
+        g = os.environ[google_cred_env].replace("\\\\n", "\\n")
+        with open("./google_creds.json", "w") as cred_file:
             cred_file.write(g)
 
-        self.gsheet_client: pygsheets.client = pygsheets.authorize(service_file='./google_creds.json'
+        self.gsheet_client: pygsheets.client = pygsheets.authorize(
+            service_file="./google_creds.json"
         )
         # hack for escape chars in GitHub action cleaning up
-        os.remove('./google_creds.json')
+        os.remove("./google_creds.json")
 
         self.spreadsheet_link: str = spreadsheet_link
         self.worksheet_index: int = worksheet_index
@@ -52,7 +53,7 @@ class MealsListManager:
                 meal["Meal"],
                 meal["Days to serve"],
                 meal.get("Kind", ""),
-                meal["Last suggested to"]
+                meal["Last suggested to"],
             )
             for meal in all_records
         ]

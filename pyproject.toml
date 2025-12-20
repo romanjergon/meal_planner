@@ -41,6 +41,7 @@ mock = "^5.0.0"
 bandit = "^1.8.0"
 safety = "^3.7.0"
 hypothesis = "^6.130.0"
+isort = "^5.13.0"
 
 [flake8]
 max-line-length = 88

@@ -3,14 +3,12 @@ import datetime
 import logging
 import os
 
-from . import meal_plan_formatter
-from . import meal_plan_generator
 from dotenv import load_dotenv
+
+from . import mail_notifier, meal_plan_formatter, meal_plan_generator
+from .mealitem import MealItem
 from .meals_list_manager import MealsListManager
 from .plan_period import PlanPeriod
-
-from . import mail_notifier
-from .mealitem import MealItem
 
 load_dotenv()
 
@@ -72,12 +70,17 @@ def main() -> None:
     meals_list: list[MealItem] = meals_list_manager.get_meals_list()
 
     # Separate soups and main courses
-    soups_list = [m for m in meals_list if m.kind and m.kind.strip().lower() == 'soup']
-    main_courses_list = [m for m in meals_list if not m.kind or m.kind.strip().lower() != 'soup']
+    soups_list = [m for m in meals_list if m.kind and m.kind.strip().lower() == "soup"]
+    main_courses_list = [
+        m for m in meals_list if not m.kind or m.kind.strip().lower() != "soup"
+    ]
 
     # generate meal plans
     main_course_plan: list[MealItem] = meal_plan_generator.generate_meal_plan(
-        main_courses_list, plan_period, datetime.date.today(), DAYS_MEAL_MUST_NOT_BE_SUGGESTED
+        main_courses_list,
+        plan_period,
+        datetime.date.today(),
+        DAYS_MEAL_MUST_NOT_BE_SUGGESTED,
     )
     soup_plan: list[MealItem] = meal_plan_generator.generate_meal_plan(
         soups_list, plan_period, datetime.date.today(), DAYS_MEAL_MUST_NOT_BE_SUGGESTED
